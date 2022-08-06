@@ -8,6 +8,7 @@ import { findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection
 import { PaginationArgs } from 'src/common/pagination/pagination.args';
 import { StockOrder } from './dto/stock-order.input';
 import { StockConnection } from './models/stock-connection.model';
+import { StockSymbolArgs } from './args/stock-symbol.args';
 
 @Resolver(() => Stock)
 export class StocksResolver {
@@ -44,7 +45,7 @@ export class StocksResolver {
     const a = await findManyCursorConnection(
       (args) =>
         this.prisma.stock.findMany({
-          // where: {},
+          // where,
           orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : null,
           ...args,
         }),
@@ -52,5 +53,10 @@ export class StocksResolver {
       { first, last, before, after }
     );
     return a;
+  }
+
+  @Query(() => Stock)
+  async stockBySymbol(@Args() arg: StockSymbolArgs) {
+    return this.prisma.stock.findFirst({ where: { symbol: arg.stockSymbol } });
   }
 }

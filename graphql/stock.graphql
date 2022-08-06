@@ -16,6 +16,12 @@ query Stocks {
   }
 }
 
+query Stock {
+  stockBySymbol(symbol: "MXRF11") {
+    ...StockData
+  }
+}
+
 fragment StockData on Stock {
   id
   createdAt
