@@ -115,6 +115,7 @@ type Query {
   me: User!
   post(postId: String!): Post!
   publishedPosts(after: String, before: String, first: Int, last: Int, orderBy: PostOrder, query: String, skip: Int): PostConnection!
+  stocks(after: String, before: String, first: Int, last: Int, orderBy: StockOrder, query: String, skip: Int): StockConnection!
   userPosts(userId: String!): [Post!]!
 }
 
@@ -144,6 +145,31 @@ type Stock {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+}
+
+type StockConnection {
+  edges: [StockEdge!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type StockEdge {
+  cursor: String!
+  node: Stock!
+}
+
+input StockOrder {
+  direction: OrderDirection!
+  field: StockOrderField!
+}
+
+"""Properties by which stock connections can be ordered."""
+enum StockOrderField {
+  createdAt
+  id
+  name
+  symbol
+  updatedAt
 }
 
 type Subscription {

@@ -1,9 +1,13 @@
 import { PrismaService } from 'nestjs-prisma';
-import { Resolver, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
 import { Stock } from './models/stock.model';
 import { CreateStockInput } from './dto/createStock.input';
+import { findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
+import { PaginationArgs } from 'src/common/pagination/pagination.args';
+import { StockOrder } from './dto/stock-order.input';
+import { StockConnection } from './models/stock-connection.model';
 
 @Resolver(() => Stock)
 export class StocksResolver {
@@ -22,5 +26,31 @@ export class StocksResolver {
       },
     });
     return newStock;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(() => StockConnection)
+  async stocks(
+    @Args() { after, before, first, last }: PaginationArgs,
+    @Args({ name: 'query', type: () => String, nullable: true })
+    query: string,
+    @Args({
+      name: 'orderBy',
+      type: () => StockOrder,
+      nullable: true,
+    })
+    orderBy: StockOrder
+  ) {
+    const a = await findManyCursorConnection(
+      (args) =>
+        this.prisma.stock.findMany({
+          // where: {},
+          orderBy: orderBy ? { [orderBy.field]: orderBy.direction } : null,
+          ...args,
+        }),
+      () => this.prisma.post.count(),
+      { first, last, before, after }
+    );
+    return a;
   }
 }

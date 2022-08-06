@@ -1,0 +1,28 @@
+query Stocks {
+  stocks(first: 20, orderBy: { field: symbol, direction: desc }) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...StockData
+      }
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+
+fragment StockData on Stock {
+  id
+  createdAt
+  updatedAt
+  category
+  cnpj
+  name
+  symbol
+  type
+}
