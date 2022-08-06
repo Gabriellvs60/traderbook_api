@@ -1,16 +1,11 @@
 import { ObjectType } from '@nestjs/graphql';
 import { BaseModel } from 'src/common/models/base.model';
 
-export enum StockType {
-  FII,
-  RV,
-}
-
 @ObjectType()
 export class Stock extends BaseModel {
   symbol: string;
   name: string;
   category: string;
-  type: StockType;
+  type: string;
   cnpj: string;
 }

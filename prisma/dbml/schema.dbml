@@ -31,7 +31,7 @@ Table Stock {
   updatedAt DateTime [not null]
   symbol String [not null]
   name String [not null]
-  category String
+  category String [not null]
   type String [not null]
   cnpj String [not null]
 }
