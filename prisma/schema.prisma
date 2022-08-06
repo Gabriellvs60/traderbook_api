@@ -35,6 +35,17 @@ model Post {
   authorId  String?
 }
 
+model Stock {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  symbol    String
+  name      String
+  category  String
+  type      String
+  cnpj      String
+}
+
 enum Role {
   ADMIN
   USER
